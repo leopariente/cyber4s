@@ -1,0 +1,20 @@
+.black {
+    height: 100px;
+    width: 100px;
+    background-color: black;
+}
+
+.white {
+    height: 100px;
+    width: 100px;
+    background-color: white;
+}
+
+.outline {
+    outline: black solid 2px;
+}
+
+table {
+margin: 20px;
+}
+
