@@ -10,8 +10,12 @@
     background-color: white;
 }
 
-tr {
-    outline: black solid 2px;
+td:hover {
+  background-color: grey;
+}
+
+td {
+  outline: black solid 2px;
 }
 
 table {
