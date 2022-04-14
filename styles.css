@@ -1,13 +1,13 @@
 .black {
     height: 100px;
     width: 100px;
-    background-color: black;
+    background-color: rgb(102,51,0);
 }
 
 .white {
     height: 100px;
     width: 100px;
-    background-color: white;
+    background-color: rgb(227,193,111);
 }
 
 td:hover {
@@ -20,5 +20,15 @@ td {
 
 table {
 margin: 20px;
+}
+
+.outline-board {
+  height: 1000px;
+  width: 1000px;
+  outline: black solid 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(102,51,0);
 }
 
