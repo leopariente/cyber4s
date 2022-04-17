@@ -12,6 +12,7 @@
 
 td {
     outline: black solid 2px;
+    padding: 0;
   }
 
 td:hover {
@@ -32,4 +33,33 @@ body {
   justify-content: center;
   align-items: center;
   background-color: rgb(102,51,0);
+  position: relative;
+}
+
+.clicked {
+  background-color: rgba(220, 220, 220, 0.4);
+}
+
+img {
+  position: absolute;
+}
+
+#black-king {
+  left: 517px;
+  top: 100px;
+}
+
+#black-queen {
+  left: 417px;
+  top: 100px;
+}
+
+#black-rook1 {
+ left: 117px;
+ top: 100px;
+}
+
+#black-rook2 {
+  right: 117px;
+  top: 100px;
 }
