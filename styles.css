@@ -13,6 +13,7 @@
 td {
     outline: black solid 2px;
     padding: 0;
+    position: relative;
   }
 
 td:hover {
@@ -42,24 +43,7 @@ body {
 
 img {
   position: absolute;
+  top: 10px;
+  left: 15px;
 }
 
-#black-king {
-  left: 517px;
-  top: 100px;
-}
-
-#black-queen {
-  left: 417px;
-  top: 100px;
-}
-
-#black-rook1 {
- left: 117px;
- top: 100px;
-}
-
-#black-rook2 {
-  right: 117px;
-  top: 100px;
-}
