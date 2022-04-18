@@ -14,7 +14,6 @@ class Piece {
     this.col = col;
     this.type = type;
     this.name = name;
-    this.movement = 0;
   }
 }
 
