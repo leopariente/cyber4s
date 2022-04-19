@@ -31,16 +31,16 @@ class Piece {
       relativeMoves = this.getRookRelativeMoves();
     }
     else if (this.name === KNIGHT) {
-      //KNIGHT MOVES
+      relativeMoves = this.getKnightRelativeMoves();
     }
     else if (this.name === BISHOP) {
-      //BISHOP MOVES
+      relativeMoves = this.getBishopRelativeMoves();
     }
-    else if (this.name === KING) {
-      //KING MOVES
+    else if (this.name === QUEEN) {
+      relativeMoves = this.getQueenRelativeMoves();
     }
     else if (this.name === KING){
-      //KING MOVES
+      relativeMoves = this.getKingRelativeMoves();
     }
     let absoluteMoves = [];
     for (let relativeMove of relativeMoves) {
@@ -54,45 +54,112 @@ class Piece {
     }
     return filteredMoves;
   }
-getPawnRelativeMoves() {
-  //TODO give different answer for black player
-  return [[1,0]];
-}
-getRookRelativeMoves() {
+  getPawnRelativeMoves() {
+    if(this.type === "black") {
+    return [[1,0]];
+    }
+    else {
+      return [[-1, 0]];
+    }
+  }
+  getRookRelativeMoves() {
+    let result = [];
+    for(let i = 1; i < 8; i++) {
+      result.push([i,0]);
+      result.push([-i,0]);
+      result.push([0,i]);
+      result.push([0,-i]);
+    }
+    return result;
+  }
+  getKnightRelativeMoves() {
+    let result = [];
+    for(let i = 1; i < 3; i++) {
+      result.push([i, 0]);
+      result.push([-i, 0]);
+      if (this.col <= 5) {
+      result.push([0, i]);
+      }
+      if (this.col >= 2) {
+      result.push([0, -i]);
+      }
+    }
+    result.push([2, 1]);
+    result.push([-2, 1]);
+    result.push([2, -1]);
+    result.push([-2, -1]);
+    result.push([1, 2]);
+    result.push([-1, 2]);
+    result.push([1, -2]);
+    result.push([-1, -2]);
+    return result;
+  }
+  getBishopRelativeMoves() {
+    let result = [];
+    for(let i=1; i<8; i++) {
+        result.push([i, i]);
+        result.push([-i, -i]);
+        result.push([i, -i]);
+        result.push([-i, i]);
+    }
+    return result;
+  }
+  getQueenRelativeMoves() {
   let result = [];
-  for(let i = 1; i < 8; i++) {
-    result.push([i,0]);
-    result.push([-i,0]);
-    result.push([0,i]);
-    result.push([0,-i]);
+  for(let i=1; i<8; i++) {
+      result.push([i, i]);
+      result.push([-i, -i]);
+      result.push([i, -i]);
+      result.push([-i, i]);
+      result.push([i,0]);
+      result.push([-i,0]);
+      result.push([0,i]);
+      result.push([0,-i]);
   }
   return result;
+  }
+  getKingRelativeMoves() {
+    let result = [];
+    for(let i=1; i<8; i++) {
+        result.push([1, 1]);
+        result.push([-1, -1]);
+        result.push([1, -1]);
+        result.push([-1, 1]);
+        result.push([1,1]);
+        result.push([-1,0]);
+        result.push([0,1]);
+        result.push([0,-1]);
+    }
+    return result;
+  }
 }
+
+class BoardData {
+  constructor(pieces){
+    this.pieces = pieces;
+  }
 }
+
 function getInitialBoard() {
   let result = [];
-  result.push(new Piece(0, 0, "black", ROOK));
-  result.push(new Piece(0, 1, "black", KNIGHT));
-  result.push(new Piece(0, 2, "black", BISHOP));
-  result.push(new Piece(0, 3, "black", QUEEN));
-  result.push(new Piece(0, 4, "black", KING));
-  result.push(new Piece(0, 5, "black", BISHOP));
-  result.push(new Piece(0, 6, "black", KNIGHT));
-  result.push(new Piece(0, 7, "black", ROOK));
-
-  result.push(new Piece(7, 0, "white", ROOK));
-  result.push(new Piece(7, 1, "white", KNIGHT));
-  result.push(new Piece(7, 2, "white", BISHOP));
-  result.push(new Piece(7, 3, "white", QUEEN));
-  result.push(new Piece(7, 4, "white", KING));
-  result.push(new Piece(7, 5, "white", BISHOP));
-  result.push(new Piece(7, 6, "white", KNIGHT));
-  result.push(new Piece(7, 7, "white", ROOK));
+  setPieces(result, 0, "black");
+  setPieces(result, 7, "white");
   for (let i = 0; i < 8; i++) {
     result.push(new Piece(1, i, "black", PAWN));
     result.push(new Piece(6, i, "white", PAWN));
   }
   return result;
+}
+
+function setPieces(result, row, type) {
+  result.push(new Piece(row, 0, type, ROOK));
+  result.push(new Piece(row, 1, type, KNIGHT));
+  result.push(new Piece(row, 2, type, BISHOP));
+  result.push(new Piece(row, 3, type, QUEEN));
+  result.push(new Piece(row, 4, type, KING));
+  result.push(new Piece(row, 5, type, BISHOP));
+  result.push(new Piece(row, 6, type, KNIGHT));
+  result.push(new Piece(row, 7, type, ROOK));
 }
 
 function addImage(cell, type, name) {
@@ -104,10 +171,11 @@ function addImage(cell, type, name) {
 function onCellClick(event, row, col) {
   console.log(row, col);
   if (selectedCell !== undefined) {
-    let cellList = document.querySelectorAll("td.clicked");
+    let cellList = document.querySelectorAll("td.potential");
     for (cell of cellList) {
-      cell.classList.remove('clicked');
+      cell.classList.remove('potential');
     }
+    selectedCell.classList.remove("clicked");
   }
   selectedCell = event.currentTarget;
   selectedCell.classList.add('clicked');
@@ -118,7 +186,7 @@ function onCellClick(event, row, col) {
       let possibleMoves = piece.getPossibleMoves();
       for (let possiblemove of possibleMoves) {
         console.log(possiblemove)
-        chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add("clicked");
+        chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add("potential");
       }
     }
   }
