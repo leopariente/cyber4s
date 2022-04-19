@@ -129,6 +129,7 @@ class Piece {
 class BoardData {
   constructor(pieces){
     this.pieces = pieces;
+    this.turn = "white";
   }
 
   getPiece(row, col) {
@@ -140,12 +141,21 @@ class BoardData {
   }
 
   makeMove(piece, row, col) {
-    console.log(piece)
+    if(piece.type === this.turn){
     addImage(chessTable.rows[row].cells[col], piece.type, piece.name);
     chessTable.rows[piece.row].cells[piece.col].removeChild(chessTable.rows[piece.row].cells[piece.col].firstElementChild);
     piece.row = row;
     piece.col = col;
     playingPiece = undefined;
+    }
+  }
+  switchMoves() {
+    if(this.turn === "white") {
+      this.turn = "black";
+    }
+    else {
+      this.turn = "white";
+    }
   }
 }
 
@@ -183,6 +193,7 @@ function onCellClick(event, row, col) {
     selectedCell = event.currentTarget;
     if (selectedCell.classList.contains("potential")) {
       boardData.makeMove(playingPiece, row, col);
+      boardData.switchMoves();
     }
   }
   selectedCell = event.currentTarget;
@@ -191,6 +202,7 @@ function onCellClick(event, row, col) {
     cell.classList.remove('potential');
   }
   let piece = boardData.getPiece(row, col);
+  if(piece.type === boardData.turn) {
   if (piece != undefined) {
     playingPiece = piece;
     selectedCell.classList.add('clicked');
@@ -199,6 +211,7 @@ function onCellClick(event, row, col) {
       console.log(possibleMoves);
       chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add("potential");
     }
+  }
   }
   }
 
