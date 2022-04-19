@@ -2,44 +2,95 @@ const chessBoard = document.createElement("div");
 chessBoard.classList.add("outline-board")
 document.body.appendChild(chessBoard);
 
-const chessTable = document.createElement("table");
-chessBoard.appendChild(chessTable);
-
 let selectedCell;
 let pieces = [];
 
+const PAWN = 'pawn';
+const ROOK = 'rook';
+const KNIGHT = 'knight';
+const BISHOP = 'bishop';
+const QUEEN = 'queen';
+const KING = 'king';
+
+chessTable = document.createElement("table");
+chessBoard.appendChild(chessTable);
+
 class Piece {
-  constructor(row, col, type, name, movement){
+  constructor(row, col, type, name){
     this.row = row;
     this.col = col;
     this.type = type;
     this.name = name;
   }
+  getPossibleMoves() {
+    let relativeMoves;
+    if (this.name === PAWN) {
+      relativeMoves = this.getPawnRelativeMoves();
+    }
+    else if (this.name === ROOK){
+      relativeMoves = this.getRookRelativeMoves();
+    }
+    else if (this.name === KNIGHT) {
+      //KNIGHT MOVES
+    }
+    else if (this.name === BISHOP) {
+      //BISHOP MOVES
+    }
+    else if (this.name === KING) {
+      //KING MOVES
+    }
+    else if (this.name === KING){
+      //KING MOVES
+    }
+    let absoluteMoves = [];
+    for (let relativeMove of relativeMoves) {
+      absoluteMoves.push([relativeMove[0] + this.row, relativeMove[1] + this.col]);
+    }
+    let filteredMoves = [];
+    for(let absoluteMove of absoluteMoves) {
+      if ((absoluteMove[0] >= 0 && absoluteMove[0] <= 7) && (absoluteMove[1] >= 0 && absoluteMove[1] <= 7)) {
+        filteredMoves.push(absoluteMove);
+      }
+    }
+    return filteredMoves;
+  }
+getPawnRelativeMoves() {
+  //TODO give different answer for black player
+  return [[1,0]];
 }
-
+getRookRelativeMoves() {
+  let result = [];
+  for(let i = 1; i < 8; i++) {
+    result.push([i,0]);
+    result.push([-i,0]);
+    result.push([0,i]);
+    result.push([0,-i]);
+  }
+  return result;
+}
+}
 function getInitialBoard() {
   let result = [];
-  result.push(new Piece(0, 0, "black", "rook"));
-  result.push(new Piece(0, 1, "black", "knight"));
-  result.push(new Piece(0, 2, "black", "bishop"));
-  result.push(new Piece(0, 3, "black", "queen"));
-  result.push(new Piece(0, 4, "black", "king"));
-  result.push(new Piece(0, 5, "black", "bishop"));
-  result.push(new Piece(0, 6, "black", "knight"));
-  result.push(new Piece(0, 7, "black", "rook"));
+  result.push(new Piece(0, 0, "black", ROOK));
+  result.push(new Piece(0, 1, "black", KNIGHT));
+  result.push(new Piece(0, 2, "black", BISHOP));
+  result.push(new Piece(0, 3, "black", QUEEN));
+  result.push(new Piece(0, 4, "black", KING));
+  result.push(new Piece(0, 5, "black", BISHOP));
+  result.push(new Piece(0, 6, "black", KNIGHT));
+  result.push(new Piece(0, 7, "black", ROOK));
+
+  result.push(new Piece(7, 0, "white", ROOK));
+  result.push(new Piece(7, 1, "white", KNIGHT));
+  result.push(new Piece(7, 2, "white", BISHOP));
+  result.push(new Piece(7, 3, "white", QUEEN));
+  result.push(new Piece(7, 4, "white", KING));
+  result.push(new Piece(7, 5, "white", BISHOP));
+  result.push(new Piece(7, 6, "white", KNIGHT));
+  result.push(new Piece(7, 7, "white", ROOK));
   for (let i = 0; i < 8; i++) {
-    result.push(new Piece(1, i, "black", "pawn"));
-  }
-  result.push(new Piece(7, 0, "white", "rook"));
-  result.push(new Piece(7, 1, "white", "knight"));
-  result.push(new Piece(7, 2, "white", "bishop"));
-  result.push(new Piece(7, 3, "white", "queen"));
-  result.push(new Piece(7, 4, "white", "king"));
-  result.push(new Piece(7, 5, "white", "bishop"));
-  result.push(new Piece(7, 6, "white", "knight"));
-  result.push(new Piece(7, 7, "white", "rook"));
-  for (let i = 0; i < 8; i++) {
-    result.push(new Piece(6, i, "white", "pawn"));
+    result.push(new Piece(1, i, "black", PAWN));
+    result.push(new Piece(6, i, "white", PAWN));
   }
   return result;
 }
@@ -50,21 +101,28 @@ function addImage(cell, type, name) {
   cell.appendChild(image);
 }
 
-function onCellClick(event) {
+function onCellClick(event, row, col) {
+  console.log(row, col);
   if (selectedCell !== undefined) {
-    selectedCell.classList.remove('clicked');
+    let cellList = document.querySelectorAll("td.clicked");
+    for (cell of cellList) {
+      cell.classList.remove('clicked');
+    }
   }
   selectedCell = event.currentTarget;
   selectedCell.classList.add('clicked');
-}
 
-function getPlayer(src, cell) {
-  let list = src.split('/');
-  let selectedPlayer;
-  playerType = list[4];
-  playerName = list[5].split('.')[0];
-  return playerName;
-}
+  for (piece of pieces) {
+    if (piece.row === row && piece.col === col) {
+      console.log(piece)
+      let possibleMoves = piece.getPossibleMoves();
+      for (let possiblemove of possibleMoves) {
+        console.log(possiblemove)
+        chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add("clicked");
+      }
+    }
+  }
+  }
 
 for(let i=0; i<8; i++) {
   let chessRow = chessTable.insertRow(i);
@@ -77,7 +135,7 @@ for(let i=0; i<8; i++) {
       else {
         chessTile.classList.add("dark");
       }
-      chessTile.addEventListener("click", onCellClick)
+      chessTile.addEventListener("click", (event) => onCellClick(event, i, j))
     }
   }
 
