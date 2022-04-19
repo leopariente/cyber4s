@@ -3,7 +3,7 @@ chessBoard.classList.add("outline-board")
 document.body.appendChild(chessBoard);
 
 let selectedCell;
-let pieces = [];
+let boardData;
 
 const PAWN = 'pawn';
 const ROOK = 'rook';
@@ -74,16 +74,6 @@ class Piece {
   }
   getKnightRelativeMoves() {
     let result = [];
-    for(let i = 1; i < 3; i++) {
-      result.push([i, 0]);
-      result.push([-i, 0]);
-      if (this.col <= 5) {
-      result.push([0, i]);
-      }
-      if (this.col >= 2) {
-      result.push([0, -i]);
-      }
-    }
     result.push([2, 1]);
     result.push([-2, 1]);
     result.push([2, -1]);
@@ -127,6 +117,7 @@ class Piece {
         result.push([-1, 1]);
         result.push([1,1]);
         result.push([-1,0]);
+        result.push([1,0]);
         result.push([0,1]);
         result.push([0,-1]);
     }
@@ -137,6 +128,14 @@ class Piece {
 class BoardData {
   constructor(pieces){
     this.pieces = pieces;
+  }
+
+  getPiece(row, col) {
+    for(const piece of this.pieces){
+      if(piece.row === row && piece.col === col) {
+        return piece;
+      }
+    }
   }
 }
 
@@ -178,18 +177,16 @@ function onCellClick(event, row, col) {
     selectedCell.classList.remove("clicked");
   }
   selectedCell = event.currentTarget;
-  selectedCell.classList.add('clicked');
-
-  for (piece of pieces) {
-    if (piece.row === row && piece.col === col) {
-      console.log(piece)
-      let possibleMoves = piece.getPossibleMoves();
-      for (let possiblemove of possibleMoves) {
-        console.log(possiblemove)
-        chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add("potential");
-      }
+  let piece = boardData.getPiece(row, col);
+  if (piece != undefined) {
+    selectedCell.classList.add('clicked');
+    let possibleMoves = piece.getPossibleMoves();
+    for (let possiblemove of possibleMoves) {
+      console.log(possiblemove)
+      chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add("potential");
     }
   }
+  
   }
 
 for(let i=0; i<8; i++) {
@@ -207,7 +204,7 @@ for(let i=0; i<8; i++) {
     }
   }
 
-pieces = getInitialBoard();
-for (let piece of pieces) {
+boardData = new BoardData(getInitialBoard());  
+for (let piece of boardData.pieces) {
   addImage(chessTable.rows[piece.row].cells[piece.col], piece.type, piece.name);
 }
