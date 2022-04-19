@@ -4,6 +4,7 @@ document.body.appendChild(chessBoard);
 
 let selectedCell;
 let boardData;
+let playingPiece;
 
 const PAWN = 'pawn';
 const ROOK = 'rook';
@@ -45,7 +46,7 @@ class Piece {
     let absoluteMoves = [];
     for (let relativeMove of relativeMoves) {
       absoluteMoves.push([relativeMove[0] + this.row, relativeMove[1] + this.col]);
-    }
+      }
     let filteredMoves = [];
     for(let absoluteMove of absoluteMoves) {
       if ((absoluteMove[0] >= 0 && absoluteMove[0] <= 7) && (absoluteMove[1] >= 0 && absoluteMove[1] <= 7)) {
@@ -137,6 +138,15 @@ class BoardData {
       }
     }
   }
+
+  makeMove(piece, row, col) {
+    console.log(piece)
+    addImage(chessTable.rows[row].cells[col], piece.type, piece.name);
+    chessTable.rows[piece.row].cells[piece.col].removeChild(chessTable.rows[piece.row].cells[piece.col].firstElementChild);
+    piece.row = row;
+    piece.col = col;
+    playingPiece = undefined;
+  }
 }
 
 function getInitialBoard() {
@@ -168,25 +178,28 @@ function addImage(cell, type, name) {
 }
 
 function onCellClick(event, row, col) {
-  console.log(row, col);
   if (selectedCell !== undefined) {
-    let cellList = document.querySelectorAll("td.potential");
-    for (cell of cellList) {
-      cell.classList.remove('potential');
-    }
     selectedCell.classList.remove("clicked");
+    selectedCell = event.currentTarget;
+    if (selectedCell.classList.contains("potential")) {
+      boardData.makeMove(playingPiece, row, col);
+    }
   }
   selectedCell = event.currentTarget;
+  let cellList = document.querySelectorAll("td.potential");
+  for (cell of cellList) {
+    cell.classList.remove('potential');
+  }
   let piece = boardData.getPiece(row, col);
   if (piece != undefined) {
+    playingPiece = piece;
     selectedCell.classList.add('clicked');
     let possibleMoves = piece.getPossibleMoves();
     for (let possiblemove of possibleMoves) {
-      console.log(possiblemove)
+      console.log(possibleMoves);
       chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add("potential");
     }
   }
-  
   }
 
 for(let i=0; i<8; i++) {
