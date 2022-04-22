@@ -23,6 +23,8 @@ class Piece {
     this.type = type;
     this.name = name;
   }
+  // function that takes a piece and returns a list of its possible moves.
+
   getPossibleMoves() {
     let relativeMoves;
     if (this.name === PAWN) {
@@ -55,6 +57,9 @@ class Piece {
     }
     return filteredMoves;
   }
+
+  // this section of code returns a list of relative moves for each chess piece
+
   getPawnRelativeMoves() {
     if(this.type === "black") {
     return [[1,0]];
@@ -111,7 +116,6 @@ class Piece {
   }
   getKingRelativeMoves() {
     let result = [];
-    for(let i=1; i<8; i++) {
         result.push([1, 1]);
         result.push([-1, -1]);
         result.push([1, -1]);
@@ -121,7 +125,6 @@ class Piece {
         result.push([1,0]);
         result.push([0,1]);
         result.push([0,-1]);
-    }
     return result;
   }
 }
@@ -132,6 +135,8 @@ class BoardData {
     this.turn = "white";
   }
 
+  // function that recieves a tile on board and returns the piece that is on it.
+
   getPiece(row, col) {
     for(const piece of this.pieces){
       if(piece.row === row && piece.col === col) {
@@ -139,6 +144,8 @@ class BoardData {
       }
     }
   }
+
+  // function that moves the desired piece on the board
 
   makeMove(piece, row, col) {
     if(piece.type === this.turn){
@@ -149,6 +156,9 @@ class BoardData {
     playingPiece = undefined;
     }
   }
+  
+  // function that switches turns between the white and black player 
+
   switchMoves() {
     if(this.turn === "white") {
       this.turn = "black";
@@ -158,6 +168,8 @@ class BoardData {
     }
   }
 }
+
+// function that returns a list of the chess pieces with their initial position on the board
 
 function getInitialBoard() {
   let result = [];
@@ -170,6 +182,8 @@ function getInitialBoard() {
   return result;
 }
 
+// function associated to getInitialBoard. Saves us double writing of code
+
 function setPieces(result, row, type) {
   result.push(new Piece(row, 0, type, ROOK));
   result.push(new Piece(row, 1, type, KNIGHT));
@@ -181,26 +195,34 @@ function setPieces(result, row, type) {
   result.push(new Piece(row, 7, type, ROOK));
 }
 
+// function that adds an image to a cell
+
 function addImage(cell, type, name) {
   const image = document.createElement('img');
   image.src = 'static/' + type + '/' + name + '.png';
   cell.appendChild(image);
 }
 
+// event function that happens every click, shows potential moves, moves player
+
 function onCellClick(event, row, col) {
-  if (selectedCell !== undefined) {
+  //this block of code checks if the user has already clicked on a piece before. If they did, we check if the new cell
+  // is a potential movement, move and switch turns 
+  if (selectedCell !== undefined) { 
     selectedCell.classList.remove("clicked");
     selectedCell = event.currentTarget;
     if (selectedCell.classList.contains("potential")) {
+      // gets a list of all potential moves and removes the css class to make the board clean again
+      let cellList = document.querySelectorAll("td.potential");
+      for (cell of cellList) {
+        cell.classList.remove('potential');
+      }
       boardData.makeMove(playingPiece, row, col);
       boardData.switchMoves();
     }
   }
   selectedCell = event.currentTarget;
-  let cellList = document.querySelectorAll("td.potential");
-  for (cell of cellList) {
-    cell.classList.remove('potential');
-  }
+  //checks if the tile clicked is a player. If it is and its their turn it shows the possible moves
   let piece = boardData.getPiece(row, col);
   if(piece.type === boardData.turn) {
   if (piece != undefined) {
@@ -208,18 +230,18 @@ function onCellClick(event, row, col) {
     selectedCell.classList.add('clicked');
     let possibleMoves = piece.getPossibleMoves();
     for (let possiblemove of possibleMoves) {
-      console.log(possibleMoves);
       chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add("potential");
     }
   }
   }
   }
 
+// code block below makes the 8*8 board
+
 for(let i=0; i<8; i++) {
   let chessRow = chessTable.insertRow(i);
     for(let j=0; j<8; j++) {
       let chessTile = chessRow.insertCell(j);
-      chessTile.id = "cell-" + i.toString() + "_" + j.toString();
       if((i+j) % 2 == 0) {
         chessTile.classList.add("light");
       }
@@ -230,6 +252,7 @@ for(let i=0; i<8; i++) {
     }
   }
 
+// gets a piece and adds it image to the board by its initial position
 boardData = new BoardData(getInitialBoard());  
 for (let piece of boardData.pieces) {
   addImage(chessTable.rows[piece.row].cells[piece.col], piece.type, piece.name);
