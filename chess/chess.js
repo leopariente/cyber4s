@@ -230,13 +230,13 @@ function onCellClick(event, row, col) {
   if (selectedCell !== undefined) {
     selectedCell = event.currentTarget;
     if (selectedCell.classList.contains("potential")) {
-      departureCell.classList.remove("clicked");
-      let cellList = document.querySelectorAll("td.potential");
-      for (cell of cellList) {
-        cell.classList.remove("potential");
-      }
       boardData.makeMove(playingPiece, row, col);
       boardData.switchMoves();
+    }
+    departureCell.classList.remove("clicked");
+    let cellList = document.querySelectorAll("td.potential");
+    for (cell of cellList) {
+      cell.classList.remove("potential");
     }
   }
   //this part of code is for the first click of a move, to show the possibilitiy movement of a piece
