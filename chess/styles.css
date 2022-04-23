@@ -1,29 +1,29 @@
 .dark {
-    height: 100px;
-    width: 100px;
-    background-color: rgb(102,51,0);
+  height: 100px;
+  width: 100px;
+  background-color: rgb(102, 51, 0);
 }
 
 .light {
-    height: 100px;
-    width: 100px;
-    background-color: rgb(227,193,111);
+  height: 100px;
+  width: 100px;
+  background-color: rgb(227, 193, 111);
 }
 
 td {
-    outline: black solid 2px;
-    padding: 0;
-    position: relative;
-  }
+  outline: black solid 2px;
+  padding: 0;
+  position: relative;
+}
 
 td:hover {
   background-color: grey;
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .outline-board {
@@ -33,7 +33,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(102,51,0);
+  background-color: rgb(102, 51, 0);
   position: relative;
 }
 
@@ -50,4 +50,3 @@ img {
 .potential {
   background-color: rgb(228, 143, 57);
 }
-
