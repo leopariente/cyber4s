@@ -1,5 +1,3 @@
-//TODO: update the getPossibleMoves function, to not jump over pieces.
-//TODO: only eat pieces from different color.
 //TODO: check for check and checkmate.
 
 let selectedCell;
@@ -32,30 +30,23 @@ class Piece {
 
   // function that takes a piece and returns a list of its possible moves.
 
-  getPossibleMoves() {
-    let relativeMoves;
+  getPossibleMoves(boardData) {
+    let moves;
     if (this.name === PAWN) {
-      relativeMoves = this.getPawnRelativeMoves();
+      moves = this.getPawnMoves(boardData);
     } else if (this.name === ROOK) {
-      relativeMoves = this.getRookRelativeMoves();
+      moves = this.getRookMoves(boardData);
     } else if (this.name === KNIGHT) {
-      relativeMoves = this.getKnightRelativeMoves();
+      moves = this.getKnightMoves(boardData);
     } else if (this.name === BISHOP) {
-      relativeMoves = this.getBishopRelativeMoves();
+      moves = this.getBishopMoves(boardData);
     } else if (this.name === QUEEN) {
-      relativeMoves = this.getQueenRelativeMoves();
+      moves = this.getQueenMoves(boardData);
     } else if (this.name === KING) {
-      relativeMoves = this.getKingRelativeMoves();
-    }
-    let absoluteMoves = [];
-    for (let relativeMove of relativeMoves) {
-      absoluteMoves.push([
-        relativeMove[0] + this.row,
-        relativeMove[1] + this.col,
-      ]);
+      moves = this.getKingMoves(boardData);
     }
     let filteredMoves = [];
-    for (let absoluteMove of absoluteMoves) {
+    for (let absoluteMove of moves) {
       if (
         absoluteMove[0] >= 0 &&
         absoluteMove[0] <= 7 &&
@@ -68,72 +59,112 @@ class Piece {
     return filteredMoves;
   }
 
-  // this section of code returns a list of relative moves for each chess piece
+  // returns a list of possible moves for each direction
 
-  getPawnRelativeMoves() {
+  getMovesInDirection(rowDirection, colDirection, boardData) {
+    let result = [];
+    for (let i = 1; i < 8; i++) {
+      let position = [this.row + rowDirection * i, this.col + colDirection * i];
+      if (boardData.isEmpty(position[0], position[1])) {
+        result.push(position);
+      } else if (boardData.isOponenent(position[0], position[1], this.type)) {
+        result.push(position);
+        return result;
+      } else {
+        return result;
+      }
+    }
+    return result;
+  }
+
+  // this section of code returns a list of absolute moves for each chess piece
+
+  getPawnMoves(boardData) {
+    let result = [];
+    let direction = -1;
     if (this.type === "black") {
-      return [[1, 0]];
-    } else {
-      return [[-1, 0]];
+      direction = 1;
     }
-  }
-  getRookRelativeMoves() {
-    let result = [];
-    for (let i = 1; i < 8; i++) {
-      result.push([i, 0]);
-      result.push([-i, 0]);
-      result.push([0, i]);
-      result.push([0, -i]);
+    let position = [this.row + direction, this.col];
+    if (boardData.isEmpty(position[0], position[1])) {
+      result.push(position);
     }
-    return result;
-  }
-  getKnightRelativeMoves() {
-    let result = [];
-    result.push([2, 1]);
-    result.push([-2, 1]);
-    result.push([2, -1]);
-    result.push([-2, -1]);
-    result.push([1, 2]);
-    result.push([-1, 2]);
-    result.push([1, -2]);
-    result.push([-1, -2]);
-    return result;
-  }
-  getBishopRelativeMoves() {
-    let result = [];
-    for (let i = 1; i < 8; i++) {
-      result.push([i, i]);
-      result.push([-i, -i]);
-      result.push([i, -i]);
-      result.push([-i, i]);
+    position = [this.row + direction, this.col + 1];
+    if (boardData.isOponenent(position[0], position[1], this.type)) {
+      result.push(position);
+    }
+    position = [this.row + direction, this.col - 1];
+    if (boardData.isOponenent(position[0], position[1], this.type)) {
+      result.push(position);
     }
     return result;
   }
-  getQueenRelativeMoves() {
+  getRookMoves(boardData) {
     let result = [];
-    for (let i = 1; i < 8; i++) {
-      result.push([i, i]);
-      result.push([-i, -i]);
-      result.push([i, -i]);
-      result.push([-i, i]);
-      result.push([i, 0]);
-      result.push([-i, 0]);
-      result.push([0, i]);
-      result.push([0, -i]);
+    result = result.concat(this.getMovesInDirection(1, 0, boardData));
+    result = result.concat(this.getMovesInDirection(-1, 0, boardData));
+    result = result.concat(this.getMovesInDirection(0, 1, boardData));
+    result = result.concat(this.getMovesInDirection(0, -1, boardData));
+    return result;
+  }
+  getKnightMoves(boardData) {
+    let result = [];
+    let possibleMoves = [
+      [2, 1],
+      [-2, 1],
+      [2, -1],
+      [-2, -1],
+      [1, 2],
+      [-1, 2],
+      [1, -2],
+      [-1, -2],
+    ];
+    for (let move of possibleMoves) {
+      let position = [this.row + move[0], this.col + move[1]];
+      if (
+        boardData.isEmpty(position[0], position[1]) ||
+        boardData.isOponenent(position[0], position[1], this.type)
+      ) {
+        result.push(position);
+      }
     }
     return result;
   }
-  getKingRelativeMoves() {
+  getBishopMoves(boardData) {
     let result = [];
-    result.push([1, 1]);
-    result.push([-1, -1]);
-    result.push([1, -1]);
-    result.push([-1, 1]);
-    result.push([1, 1]);
-    result.push([-1, 0]);
-    result.push([1, 0]);
-    result.push([0, 1]);
-    result.push([0, -1]);
+    result = result.concat(this.getMovesInDirection(1, 1, boardData));
+    result = result.concat(this.getMovesInDirection(-1, -1, boardData));
+    result = result.concat(this.getMovesInDirection(-1, 1, boardData));
+    result = result.concat(this.getMovesInDirection(1, -1, boardData));
+    return result;
+  }
+  getQueenMoves(boardData) {
+    let result = [];
+    result = result.concat(this.getBishopMoves(boardData));
+    result = result.concat(this.getRookMoves(boardData));
+    return result;
+  }
+  getKingMoves(boardData) {
+    let result = [];
+    let possibleMoves = [
+      [1, 1],
+      [-1, 1],
+      [-1, -1],
+      [1, -1],
+      [0, -1],
+      [0, 1],
+      [1, 0],
+      [-1, 0],
+    ];
+    for (let move of possibleMoves) {
+      let position = [this.row + move[0], this.col + move[1]];
+      if (
+        boardData.isEmpty(position[0], position[1]) ||
+        boardData.isOponenent(position[0], position[1], this.type)
+      ) {
+        result.push(position);
+      }
+    }
     return result;
   }
 }
@@ -154,6 +185,17 @@ class BoardData {
         return piece;
       }
     }
+  }
+
+  isEmpty(row, col) {
+    return this.getPiece(row, col) === undefined;
+  }
+
+  isOponenent(row, col, type) {
+    if (this.getPiece(row, col) !== undefined) {
+      return this.getPiece(row, col).type !== type;
+    }
+    return false;
   }
 
   // function that moves the desired piece on the board and eats
@@ -247,7 +289,7 @@ function onCellClick(event, row, col) {
       playingPiece = piece;
       departureCell = selectedCell;
       departureCell.classList.add("clicked");
-      let possibleMoves = piece.getPossibleMoves();
+      let possibleMoves = piece.getPossibleMoves(boardData);
       for (let possiblemove of possibleMoves) {
         chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add(
           "potential"
