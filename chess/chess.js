@@ -198,10 +198,17 @@ class BoardData {
     return false;
   }
 
+  cleanCells() {
+    departureCell.classList.remove("clicked");
+    let cellList = document.querySelectorAll("td.potential");
+    for (let cell of cellList) {
+      cell.classList.remove("potential");
+    }
+  }
+
   // function that moves the desired piece on the board and eats
 
   makeMove(piece, row, col) {
-    if (piece.type === this.turn) {
       let eatenPiece = boardData.getPiece(row, col);
       if (eatenPiece !== undefined) {
         chessTable.rows[row].cells[col].removeChild(
@@ -210,14 +217,12 @@ class BoardData {
         eatenPiece.row = undefined;
         eatenPiece.col = undefined;
       }
-      chessTable.rows[piece.row].cells[piece.col].removeChild(
-        chessTable.rows[piece.row].cells[piece.col].firstElementChild
-      );
+      departureCell.removeChild(departureCell.firstElementChild);
       addImage(chessTable.rows[row].cells[col], piece.type, piece.name);
       piece.row = row;
       piece.col = col;
       playingPiece = undefined;
-    }
+    
   }
 
   // function that switches turns between the white and black player
@@ -268,21 +273,16 @@ function addImage(cell, type, name) {
 // event function that happens every click, shows potential moves, moves player
 
 function onCellClick(event, row, col) {
+  selectedCell = event.currentTarget;
   //this part of code is for the second click of a move, to move the piece to the desired tile
-  if (selectedCell !== undefined) {
-    selectedCell = event.currentTarget;
+  if (departureCell !== undefined) {
     if (selectedCell.classList.contains("potential")) {
       boardData.makeMove(playingPiece, row, col);
       boardData.switchMoves();
     }
-    departureCell.classList.remove("clicked");
-    let cellList = document.querySelectorAll("td.potential");
-    for (cell of cellList) {
-      cell.classList.remove("potential");
-    }
+    boardData.cleanCells();
   }
   //this part of code is for the first click of a move, to show the possibilitiy movement of a piece
-  selectedCell = event.currentTarget;
   let piece = boardData.getPiece(row, col);
   if (piece != undefined) {
     if (piece.type === boardData.turn) {
