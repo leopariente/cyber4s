@@ -1,9 +1,7 @@
 //TODO: check for check and checkmate.
 
-let selectedCell;
 let boardData;
 let playingPiece;
-let departureCell;
 
 const PAWN = "pawn";
 const ROOK = "rook";
@@ -24,21 +22,13 @@ chessBoard.appendChild(chessTable);
 
 function getInitialBoard() {
   let result = [];
-  setPieces(result, 0, "black");
-  setPieces(result, 7, "white");
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < playerList.length; i++) {
+    result.push(new Piece(0, i, "black", playerList[i]));
+    result.push(new Piece(7, i, "white", playerList[i]));
     result.push(new Piece(1, i, "black", PAWN));
     result.push(new Piece(6, i, "white", PAWN));
   }
   return result;
-}
-
-// function associated to getInitialBoard. Saves us double writing of code
-
-function setPieces(result, row, type) {
-  for (let i = 0; i < playerList.length; i++) {
-    result.push(new Piece(row, i, type, playerList[i]));
-  }
 }
 
 // function that adds an image to a cell
@@ -51,30 +41,27 @@ function addImage(cell, type, name) {
 
 // event function that happens every click, shows potential moves, moves player
 
-function onCellClick(event, row, col) {
-  selectedCell = event.currentTarget;
+function onCellClick(row, col) {
   //this part of code is for the second click of a move, to move the piece to the desired tile
-  if (departureCell !== undefined) {
-    if (selectedCell.classList.contains("potential")) {
+  if (playingPiece !== undefined) {
+    if (chessTable.rows[row].cells[col].classList.contains("potential")) {
       boardData.makeMove(playingPiece, row, col);
       boardData.switchMoves();
     }
-    boardData.cleanCells(departureCell);
+    boardData.cleanCells();
   }
   //this part of code is for the first click of a move, to show the possibilitiy movement of a piece
-  let piece = boardData.getPiece(row, col);
-  if (piece != undefined) {
-    if (piece.type === boardData.turn) {
-      playingPiece = piece;
-      departureCell = selectedCell;
-      departureCell.classList.add("clicked");
-      let possibleMoves = piece.getPossibleMoves(boardData);
+  playingPiece = boardData.getPiece(row, col);
+  if (playingPiece != undefined) {
+    if (playingPiece.type === boardData.turn) {
+      chessTable.rows[playingPiece.row].cells[playingPiece.col].classList.add("clicked");
+      let possibleMoves = playingPiece.getPossibleMoves(boardData);
       for (let possiblemove of possibleMoves) {
-        chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add(
-          "potential"
-        );
+        chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add("potential");
       }
     }
+  } else {
+    playingPiece = undefined;
   }
 }
 
@@ -89,7 +76,7 @@ function chessGame() {
       } else {
         cell.classList.add("dark");
       }
-      cell.addEventListener("click", (event) => onCellClick(event, i, j));
+      cell.addEventListener("click", () => onCellClick(i, j));
     }
   }
   // gets a piece and adds it image to the board by its initial position
