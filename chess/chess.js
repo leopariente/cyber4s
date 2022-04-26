@@ -11,6 +11,7 @@ const KNIGHT = "knight";
 const BISHOP = "bishop";
 const QUEEN = "queen";
 const KING = "king";
+const playerList = [ROOK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROOK];
 
 const chessBoard = document.createElement("div");
 chessBoard.classList.add("outline-board");
@@ -18,223 +19,6 @@ document.body.appendChild(chessBoard);
 
 chessTable = document.createElement("table");
 chessBoard.appendChild(chessTable);
-
-// class for chess piece. Has properties for their postition, color and name
-class Piece {
-  constructor(row, col, type, name) {
-    this.row = row;
-    this.col = col;
-    this.type = type;
-    this.name = name;
-  }
-
-  // function that takes a piece and returns a list of its possible moves.
-
-  getPossibleMoves(boardData) {
-    let moves;
-    if (this.name === PAWN) {
-      moves = this.getPawnMoves(boardData);
-    } else if (this.name === ROOK) {
-      moves = this.getRookMoves(boardData);
-    } else if (this.name === KNIGHT) {
-      moves = this.getKnightMoves(boardData);
-    } else if (this.name === BISHOP) {
-      moves = this.getBishopMoves(boardData);
-    } else if (this.name === QUEEN) {
-      moves = this.getQueenMoves(boardData);
-    } else if (this.name === KING) {
-      moves = this.getKingMoves(boardData);
-    }
-    let filteredMoves = [];
-    for (let absoluteMove of moves) {
-      if (
-        absoluteMove[0] >= 0 &&
-        absoluteMove[0] <= 7 &&
-        absoluteMove[1] >= 0 &&
-        absoluteMove[1] <= 7
-      ) {
-        filteredMoves.push(absoluteMove);
-      }
-    }
-    return filteredMoves;
-  }
-
-  // returns a list of possible moves for each direction
-
-  getMovesInDirection(rowDirection, colDirection, boardData) {
-    let result = [];
-    for (let i = 1; i < 8; i++) {
-      let position = [this.row + rowDirection * i, this.col + colDirection * i];
-      if (boardData.isEmpty(position[0], position[1])) {
-        result.push(position);
-      } else if (boardData.isOponenent(position[0], position[1], this.type)) {
-        result.push(position);
-        return result;
-      } else {
-        return result;
-      }
-    }
-    return result;
-  }
-
-  // this section of code returns a list of absolute moves for each chess piece
-
-  getPawnMoves(boardData) {
-    let result = [];
-    let direction = -1;
-    if (this.type === "black") {
-      direction = 1;
-    }
-    let position = [this.row + direction, this.col];
-    if (boardData.isEmpty(position[0], position[1])) {
-      result.push(position);
-    }
-    position = [this.row + direction, this.col + 1];
-    if (boardData.isOponenent(position[0], position[1], this.type)) {
-      result.push(position);
-    }
-    position = [this.row + direction, this.col - 1];
-    if (boardData.isOponenent(position[0], position[1], this.type)) {
-      result.push(position);
-    }
-    return result;
-  }
-  getRookMoves(boardData) {
-    let result = [];
-    result = result.concat(this.getMovesInDirection(1, 0, boardData));
-    result = result.concat(this.getMovesInDirection(-1, 0, boardData));
-    result = result.concat(this.getMovesInDirection(0, 1, boardData));
-    result = result.concat(this.getMovesInDirection(0, -1, boardData));
-    return result;
-  }
-  getKnightMoves(boardData) {
-    let result = [];
-    let possibleMoves = [
-      [2, 1],
-      [-2, 1],
-      [2, -1],
-      [-2, -1],
-      [1, 2],
-      [-1, 2],
-      [1, -2],
-      [-1, -2],
-    ];
-    for (let move of possibleMoves) {
-      let position = [this.row + move[0], this.col + move[1]];
-      if (
-        boardData.isEmpty(position[0], position[1]) ||
-        boardData.isOponenent(position[0], position[1], this.type)
-      ) {
-        result.push(position);
-      }
-    }
-    return result;
-  }
-  getBishopMoves(boardData) {
-    let result = [];
-    result = result.concat(this.getMovesInDirection(1, 1, boardData));
-    result = result.concat(this.getMovesInDirection(-1, -1, boardData));
-    result = result.concat(this.getMovesInDirection(-1, 1, boardData));
-    result = result.concat(this.getMovesInDirection(1, -1, boardData));
-    return result;
-  }
-  getQueenMoves(boardData) {
-    let result = [];
-    result = result.concat(this.getBishopMoves(boardData));
-    result = result.concat(this.getRookMoves(boardData));
-    return result;
-  }
-  getKingMoves(boardData) {
-    let result = [];
-    let possibleMoves = [
-      [1, 1],
-      [-1, 1],
-      [-1, -1],
-      [1, -1],
-      [0, -1],
-      [0, 1],
-      [1, 0],
-      [-1, 0],
-    ];
-    for (let move of possibleMoves) {
-      let position = [this.row + move[0], this.col + move[1]];
-      if (
-        boardData.isEmpty(position[0], position[1]) ||
-        boardData.isOponenent(position[0], position[1], this.type)
-      ) {
-        result.push(position);
-      }
-    }
-    return result;
-  }
-}
-
-// class for the "brain" of the game. arranges the position of pieces, and order of game
-
-class BoardData {
-  constructor(pieces) {
-    this.pieces = pieces;
-    this.turn = "white";
-  }
-
-  // function that recieves a tile on board and returns the piece that is on it.
-
-  getPiece(row, col) {
-    for (const piece of this.pieces) {
-      if (piece.row === row && piece.col === col) {
-        return piece;
-      }
-    }
-  }
-
-  isEmpty(row, col) {
-    return this.getPiece(row, col) === undefined;
-  }
-
-  isOponenent(row, col, type) {
-    if (this.getPiece(row, col) !== undefined) {
-      return this.getPiece(row, col).type !== type;
-    }
-    return false;
-  }
-
-  cleanCells() {
-    departureCell.classList.remove("clicked");
-    let cellList = document.querySelectorAll("td.potential");
-    for (let cell of cellList) {
-      cell.classList.remove("potential");
-    }
-  }
-
-  // function that moves the desired piece on the board and eats
-
-  makeMove(piece, row, col) {
-      let eatenPiece = boardData.getPiece(row, col);
-      if (eatenPiece !== undefined) {
-        chessTable.rows[row].cells[col].removeChild(
-          chessTable.rows[row].cells[col].firstElementChild
-        );
-        eatenPiece.row = undefined;
-        eatenPiece.col = undefined;
-      }
-      departureCell.removeChild(departureCell.firstElementChild);
-      addImage(chessTable.rows[row].cells[col], piece.type, piece.name);
-      piece.row = row;
-      piece.col = col;
-      playingPiece = undefined;
-    
-  }
-
-  // function that switches turns between the white and black player
-
-  switchMoves() {
-    if (this.turn === "white") {
-      this.turn = "black";
-    } else {
-      this.turn = "white";
-    }
-  }
-}
 
 // function that returns a list of the chess pieces with their initial position on the board
 
@@ -252,14 +36,9 @@ function getInitialBoard() {
 // function associated to getInitialBoard. Saves us double writing of code
 
 function setPieces(result, row, type) {
-  result.push(new Piece(row, 0, type, ROOK));
-  result.push(new Piece(row, 1, type, KNIGHT));
-  result.push(new Piece(row, 2, type, BISHOP));
-  result.push(new Piece(row, 3, type, QUEEN));
-  result.push(new Piece(row, 4, type, KING));
-  result.push(new Piece(row, 5, type, BISHOP));
-  result.push(new Piece(row, 6, type, KNIGHT));
-  result.push(new Piece(row, 7, type, ROOK));
+  for (let i = 0; i < playerList.length; i++) {
+    result.push(new Piece(row, i, type, playerList[i]));
+  }
 }
 
 // function that adds an image to a cell
@@ -280,7 +59,7 @@ function onCellClick(event, row, col) {
       boardData.makeMove(playingPiece, row, col);
       boardData.switchMoves();
     }
-    boardData.cleanCells();
+    boardData.cleanCells(departureCell);
   }
   //this part of code is for the first click of a move, to show the possibilitiy movement of a piece
   let piece = boardData.getPiece(row, col);
