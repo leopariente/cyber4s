@@ -1,5 +1,3 @@
-//TODO: check for check and checkmate.
-
 let boardData;
 let playingPiece;
 
@@ -15,8 +13,16 @@ const chessBoard = document.createElement("div");
 chessBoard.classList.add("outline-board");
 document.body.appendChild(chessBoard);
 
-chessTable = document.createElement("table");
+const chessTable = document.createElement("table");
 chessBoard.appendChild(chessTable);
+
+function showWinnerDialogue() {
+  let winner = boardData.winner.charAt(0).toUpperCase() + boardData.winner.slice(1);
+  const winnerDialogue = document.createElement("div");
+  winnerDialogue.classList.add("winner");
+  winnerDialogue.textContent = winner + " Wins!";
+  chessBoard.appendChild(winnerDialogue);
+}
 
 // function that returns a list of the chess pieces with their initial position on the board
 
@@ -36,6 +42,7 @@ function getInitialBoard() {
 function addImage(cell, type, name) {
   const image = document.createElement("img");
   image.src = "static/" + type + "/" + name + ".png";
+  image.draggable = false;
   cell.appendChild(image);
 }
 
@@ -50,18 +57,24 @@ function onCellClick(row, col) {
     }
     boardData.cleanCells();
   }
-  //this part of code is for the first click of a move, to show the possibilitiy movement of a piece
-  playingPiece = boardData.getPiece(row, col);
-  if (playingPiece != undefined) {
-    if (playingPiece.type === boardData.turn) {
-      chessTable.rows[playingPiece.row].cells[playingPiece.col].classList.add("clicked");
+  if (boardData.winner === undefined) {
+    //this part of code is for the first click of a move, to show the possibilitiy movement of a piece
+    playingPiece = boardData.getPiece(row, col);
+    if (playingPiece != undefined && playingPiece.type === boardData.turn) {
+      chessTable.rows[playingPiece.row].cells[playingPiece.col].classList.add(
+        "clicked"
+      );
       let possibleMoves = playingPiece.getPossibleMoves(boardData);
       for (let possiblemove of possibleMoves) {
-        chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add("potential");
+        chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add(
+          "potential"
+        );
       }
+    } else {
+      playingPiece = undefined;
     }
   } else {
-    playingPiece = undefined;
+    showWinnerDialogue();
   }
 }
 

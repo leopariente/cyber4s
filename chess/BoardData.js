@@ -5,6 +5,7 @@ class BoardData {
     this.pieces = pieces;
     this.turn = "white";
     this.check = false;
+    this.winner = undefined;
   }
 
   // function that recieves a tile on board and returns the piece that is on it.
@@ -57,6 +58,9 @@ class BoardData {
     piece.row = row;
     piece.col = col;
     playingPiece = undefined;
+    if (eatenPiece !== undefined && eatenPiece.name === "king") {
+      this.winner = piece.type;
+    }
   }
 
   // function that switches turns between the white and black player

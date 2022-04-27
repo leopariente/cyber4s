@@ -21,9 +21,10 @@ td:hover {
 }
 
 body {
-  display: flex;
+  display: flex column;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .outline-board {
@@ -35,6 +36,7 @@ body {
   align-items: center;
   background-color: rgb(102, 51, 0);
   position: relative;
+  margin: auto;
 }
 
 .clicked {
@@ -49,4 +51,27 @@ img {
 
 .potential {
   background-color: rgb(228, 143, 57);
+}
+
+.winner {
+  padding: 50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: max-content;
+  background-color: white;
+  border-radius: 10px;
+  font-size: 50px;
+}
+
+.title {
+  color: #111;
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: 50px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-align: center;
 }
