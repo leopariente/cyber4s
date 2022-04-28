@@ -9,7 +9,7 @@ class Piece {
 
   // function that takes a piece and returns a list of its possible moves.
 
-  getPossibleMoves(boardData) {
+  paintPossibleMoves(boardData) {
     let moves;
     if (this.name === PAWN) {
       moves = this.getPawnMoves(boardData);
@@ -35,7 +35,11 @@ class Piece {
         filteredMoves.push(absoluteMove);
       }
     }
-    return filteredMoves;
+    for (let filteredmove of filteredMoves) {
+      chessTable.rows[filteredmove[0]].cells[filteredmove[1]].classList.add(
+        "potential"
+      );
+    }
   }
 
   // returns a list of possible moves for each direction

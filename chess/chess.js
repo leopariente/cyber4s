@@ -61,15 +61,8 @@ function onCellClick(row, col) {
     //this part of code is for the first click of a move, to show the possibilitiy movement of a piece
     playingPiece = boardData.getPiece(row, col);
     if (playingPiece != undefined && playingPiece.type === boardData.turn) {
-      chessTable.rows[playingPiece.row].cells[playingPiece.col].classList.add(
-        "clicked"
-      );
-      let possibleMoves = playingPiece.getPossibleMoves(boardData);
-      for (let possiblemove of possibleMoves) {
-        chessTable.rows[possiblemove[0]].cells[possiblemove[1]].classList.add(
-          "potential"
-        );
-      }
+      chessTable.rows[playingPiece.row].cells[playingPiece.col].classList.add("clicked");
+      playingPiece.paintPossibleMoves(boardData);
     } else {
       playingPiece = undefined;
     }
@@ -95,11 +88,7 @@ function chessGame() {
   // gets a piece and adds it image to the board by its initial position
   boardData = new BoardData(getInitialBoard());
   for (let piece of boardData.pieces) {
-    addImage(
-      chessTable.rows[piece.row].cells[piece.col],
-      piece.type,
-      piece.name
-    );
+    addImage(chessTable.rows[piece.row].cells[piece.col], piece.type, piece.name);
   }
 }
 
