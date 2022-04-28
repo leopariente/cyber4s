@@ -25,7 +25,6 @@ function showWinnerDialogue() {
 }
 
 // function that returns a list of the chess pieces with their initial position on the board
-
 function getInitialBoard() {
   let result = [];
   for (let i = 0; i < playerList.length; i++) {
@@ -38,7 +37,6 @@ function getInitialBoard() {
 }
 
 // function that adds an image to a cell
-
 function addImage(cell, type, name) {
   const image = document.createElement("img");
   image.src = "static/" + type + "/" + name + ".png";
@@ -47,7 +45,6 @@ function addImage(cell, type, name) {
 }
 
 // event function that happens every click, shows potential moves, moves player
-
 function onCellClick(row, col) {
   //this part of code is for the second click of a move, to move the piece to the desired tile
   if (playingPiece !== undefined) {

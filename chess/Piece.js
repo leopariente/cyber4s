@@ -8,7 +8,6 @@ class Piece {
   }
 
   // function that takes a piece and returns a list of its possible moves.
-
   paintPossibleMoves(boardData) {
     let moves;
     if (this.name === PAWN) {
@@ -43,7 +42,6 @@ class Piece {
   }
 
   // returns a list of possible moves for each direction
-
   getMovesInDirection(rowDirection, colDirection, boardData) {
     let result = [];
     for (let i = 1; i < 8; i++) {
@@ -61,7 +59,6 @@ class Piece {
   }
 
   // this section of code returns a list of absolute moves for each chess piece
-
   getPawnMoves(boardData) {
     let result = [];
     let direction = -1;
