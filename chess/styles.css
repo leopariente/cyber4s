@@ -1,13 +1,13 @@
-.dark {
+dark {
   height: 100px;
   width: 100px;
-  background-color: rgb(102, 51, 0);
+  background-color: #663300;
 }
 
 .light {
   height: 100px;
   width: 100px;
-  background-color: rgb(227, 193, 111);
+  background-color: #e3c16f;
 }
 
 td {
@@ -21,21 +21,31 @@ td:hover {
 }
 
 body {
-  display: flex column;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   position: relative;
+  display: flex column;
 }
 
 .outline-board {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
   height: 1000px;
   width: 1000px;
   outline: black solid 2px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgb(102, 51, 0);
-  position: relative;
+  background-color: #663300;
   margin: auto;
 }
 
@@ -50,7 +60,7 @@ img {
 }
 
 .potential {
-  background-color: rgb(228, 143, 57);
+  background-color: #e48f39;
 }
 
 .winner {
@@ -58,8 +68,11 @@ img {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
   text-align: center;
+  width: -webkit-max-content;
+  width: -moz-max-content;
   width: max-content;
   background-color: white;
   border-radius: 10px;
@@ -75,3 +88,4 @@ img {
   line-height: 1;
   text-align: center;
 }
+/*# sourceMappingURL=styles.css.map */

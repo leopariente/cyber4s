@@ -1,0 +1,81 @@
+$size: 100px;
+@mixin tile($size, $background-color) {
+    height: $size;
+    width: $size;
+    background-color: $background-color;
+}
+
+@mixin center {
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+dark {
+    @include tile($size, rgb(102, 51, 0));
+}
+
+.light {
+    @include tile($size, rgb(227, 193, 111));
+}
+
+td {
+    outline: black solid 2px;
+    padding: 0;
+    position: relative;
+    &:hover {
+        background-color: grey;
+    }
+}
+
+body {
+    @include center;
+    display: flex column;
+}
+
+.outline-board {
+    @include center;
+    height: 1000px;
+    width: 1000px;
+    outline: black solid 2px;
+    display: flex;
+    background-color: rgb(102, 51, 0);
+    margin: auto;
+}
+
+.clicked {
+    background-color: rgba(220, 220, 220, 0.4);
+}
+
+img {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+}
+
+.potential {
+    background-color: rgb(228, 143, 57);
+}
+
+.winner {
+    padding: 50px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: max-content;
+    background-color: white;
+    border-radius: 10px;
+    font-size: 50px;
+}
+
+.title {
+    color: #111;
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 50px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    line-height: 1;
+    text-align: center;
+}
