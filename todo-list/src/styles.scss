@@ -1,17 +1,46 @@
+$display: inline-block;
 @mixin center {
   justify-content: center;
   align-items: center;
   position: relative;
+}
+body {
+  @include center;
 }
 
 button {
   font-size: 25px;
   background-color: green;
   color: white;
-  margin: 20px;
+  margin: 10px;
   border-radius: 20%;
+  display: $display;
 }
 
+
+ul {
+  text-align: center;
 li {
   font-size: 20px;
+  border: 2px solid gray;
+  border-radius: 15%;
+  display: inline
+}
+}
+
+div {
+  @include center;
+  text-align: center;
+  input {
+    width: 30%;
+  }
+}
+.checkbox {
+  width:fit-content;
+}
+h1 {
+    text-align: center; 
+}
+p {
+  text-align: center;
 }

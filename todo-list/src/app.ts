@@ -5,13 +5,8 @@ const addTaskButton = document.createElement("button");
 const taskList = document.createElement("ul");
 const totalTasks = document.createElement("p");
 
-interface listItem {
-    value: string | null;
-    checked: boolean;
-}
-
-let listOfTasks: listItem[] = [];
 let remainingTasks: number = 0;
+let editMode: boolean = false;
 
 totalTasks.textContent = "remaining tasks: " + remainingTasks.toString();
 
@@ -26,15 +21,17 @@ function loadPage() {
     addTaskButton.addEventListener("click", () => addTask(inputTask.value));
 }
 
-function deleteTask(todoItem: any, listItem: listItem) {
-    if (listItem.checked === false) {
+function deleteTask(todoItem: any, checkBox: any) {
+    if (checkBox.checked === false) {
     remainingTasks-=1;
     }
     todoItem.remove();
     totalTasks.textContent = "remaining tasks: " + remainingTasks.toString();
 }
 
-function editTask(todoItem: any, listItem: listItem, valueToEdit: HTMLElement) {
+function editTask(todoItem: HTMLDivElement, valueToEdit: HTMLElement) {
+    if (editMode === false) {
+        editMode = true;
     const editedText = document.createElement("input");
     const confirmEdit = document.createElement("button");
     confirmEdit.textContent = "Confirm";
@@ -42,28 +39,29 @@ function editTask(todoItem: any, listItem: listItem, valueToEdit: HTMLElement) {
     todoItem.appendChild(editedText);
     todoItem.appendChild(confirmEdit);
     confirmEdit.addEventListener("click", () => confirmText(editedText, valueToEdit, todoItem))
-    console.log(listItem);
-}
-
-function confirmText(editedText: HTMLInputElement, valueToEdit: HTMLElement, todoItem: HTMLElement) {
-    if (editedText.textContent !== "") {
-        valueToEdit.textContent = editedText.textContent;
     }
-    editedText.type = "hidden";
-    console.log(todoItem);
 }
 
-function changeTaskStatus(checkBox: any, listItem: listItem) {
+function confirmText(editedText: HTMLInputElement, valueToEdit: HTMLElement, todoItem: any) {
+    console.log(editedText.value);
+    if (editedText.value !== "") {
+        valueToEdit.textContent = editedText.value;
+    }
+    todoItem.removeChild(todoItem.lastElementChild);
+    todoItem.removeChild(todoItem.lastElementChild);
+    editMode = false;
+}
+
+function changeTaskStatus(checkBox: any) {
     if (checkBox.checked) {
         remainingTasks-=1;
       } else {
           remainingTasks+=1;
       }
       totalTasks.textContent = "remaining tasks: " + remainingTasks.toString();
-      listItem.checked = !listItem.checked;
 }
 
-function addTask(task: any) {
+function addTask(task: string) {
     inputTask.value = "";
  if (task === "") {
      alert("please write something before creating a task!")
@@ -71,34 +69,32 @@ function addTask(task: any) {
  else {
      remainingTasks+=1;
      totalTasks.textContent = "remaining tasks: " + remainingTasks.toString();
-     const todoItem = document.createElement("div");
-     const todoValue = document.createElement("li");
-     todoValue.textContent = task;
-     const checkBox = document.createElement("input");
-     checkBox.type = "checkbox";
+    createTask();
+ }
 
-     const deleteButton = document.createElement("button");
-     const editButton = document.createElement("button");
+ function createTask() {
+    const todoItem = document.createElement("div");
+    const todoValue = document.createElement("li");
+    todoValue.textContent = task;
+    const checkBox = document.createElement("input");
+    checkBox.type = "checkbox";
+    checkBox.classList.add("checkbox");
 
-     deleteButton.textContent = "Delete";
-     editButton.textContent = "Edit";
-     
-     taskList.appendChild(todoItem);
-     todoItem.appendChild(checkBox);
-     todoItem.appendChild(todoValue);
-     todoItem.appendChild(editButton);
-     todoItem.appendChild(deleteButton);
+    const deleteButton = document.createElement("button");
+    const editButton = document.createElement("button");
 
-     let listItem = {
-         value: todoValue.textContent,
-         checked: false
-     }
-     listOfTasks.push(listItem);
-     console.log(listOfTasks);
+    deleteButton.textContent = "Delete";
+    editButton.textContent = "Edit";
+    
+    taskList.appendChild(todoItem);
+    todoItem.appendChild(checkBox);
+    todoItem.appendChild(todoValue);
+    todoItem.appendChild(editButton);
+    todoItem.appendChild(deleteButton);
 
-     checkBox.addEventListener('change', () => changeTaskStatus(checkBox, listItem))
-     deleteButton.addEventListener("click", () => deleteTask(todoItem, listItem));
-     editButton.addEventListener("click", () => editTask(todoItem, listItem, todoValue));
+    checkBox.addEventListener('change', () => changeTaskStatus(checkBox))
+    deleteButton.addEventListener("click", () => deleteTask(todoItem, checkBox));
+    editButton.addEventListener("click", () => editTask(todoItem, todoValue));
  }
 
 }
