@@ -14,16 +14,16 @@ function loadPage() {
     addTaskButton.addEventListener("click", () => addTask(inputTask.value));
 }
 
-function deleteTask(todoItem) {
+function deleteTask(todoItem: any) {
     todoItem.remove();
-    console.log(taskToDelete);
+    console.log(todoItem);
 }
 
-function editTask(event) {
-
+function editTask(event: any) {
+console.log(event);
 }
 
-function addTask(task) {
+function addTask(task: any) {
     inputTask.value = "";
  if (task === "") {
      alert("please write something before creating a task!")

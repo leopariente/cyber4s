@@ -1,3 +1,9 @@
+@mixin center {
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
 button {
   font-size: 25px;
   background-color: green;
@@ -9,4 +15,3 @@ button {
 li {
   font-size: 20px;
 }
-/*# sourceMappingURL=styles.css.map */
