@@ -1,4 +1,9 @@
+const listDiv = document.createElement("div");
+const h1 = document.createElement("h1");
+h1.textContent = "TODO List";
+listDiv.classList.add("list");
 const addNewTasks = document.createElement("div");
+addNewTasks.classList.add("addNewTasks")
 const inputTask = document.createElement("input");
 inputTask.placeholder = "Add your new todo";
 const addTaskButton = document.createElement("button");
@@ -15,8 +20,11 @@ function loadPage() {
     addTaskButton.textContent = "+";
     addNewTasks.appendChild(inputTask);
     addNewTasks.appendChild(addTaskButton);
-    document.body.appendChild(taskList);
-    document.body.appendChild(totalTasks);
+    listDiv.appendChild(h1);
+    listDiv.appendChild(addNewTasks);
+    listDiv.appendChild(taskList);
+    listDiv.appendChild(totalTasks);
+    document.body.appendChild(listDiv);
 
     addTaskButton.addEventListener("click", () => addTask(inputTask.value));
 }
@@ -74,6 +82,7 @@ function addTask(task: string) {
 
  function createTask() {
     const todoItem = document.createElement("div");
+    todoItem.classList.add("liDiv");
     const todoValue = document.createElement("li");
     todoValue.textContent = task;
     const checkBox = document.createElement("input");
@@ -83,7 +92,7 @@ function addTask(task: string) {
     const deleteButton = document.createElement("button");
     const editButton = document.createElement("button");
 
-    deleteButton.textContent = "Delete";
+    deleteButton.textContent = "🗑";
     editButton.textContent = "Edit";
     
     taskList.appendChild(todoItem);
