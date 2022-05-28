@@ -1,4 +1,3 @@
-$display: inline-block;
 @mixin center {
   display: flex;
   align-items: center;
@@ -86,6 +85,8 @@ li {
   border-radius: 15%;
   display: inline;
   margin-left: 5px;
+  width: 100px;
+  text-align: left;
 }
 }
 
@@ -117,4 +118,30 @@ body {
 }
 .addNewTasks {
   text-align: center;
+}
+
+/* Remove margins and padding from the list */
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the list items */
+ul li {
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  background: #eee;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+/* Set all odd list items to a different color (zebra-stripes) */
+ul li:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+/* Darker background-color on hover */
+ul li:hover {
+  background: #ddd;
 }
