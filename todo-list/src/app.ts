@@ -9,8 +9,8 @@ inputTask.placeholder = "Add your new todo";
 const addTaskButton = document.createElement("button");
 const taskList = document.createElement("ul");
 const totalTasks = document.createElement("p");
+totalTasks.classList.add("reamining")
 
-let remainingTasks: number = 0;
 let editMode: boolean = false;
 
 interface todoTask {
@@ -18,7 +18,7 @@ interface todoTask {
     checked: boolean;
 }
 let listOfTasks: todoTask[] = [];
-totalTasks.textContent = "remaining tasks: " + remainingTasks.toString();
+let remainingTasks: number = listOfTasks.length;
 
 function loadPage() {
     document.body.appendChild(addNewTasks);
@@ -32,14 +32,9 @@ function loadPage() {
     document.body.appendChild(listDiv);
 
     addTaskButton.addEventListener("click", () => addTask(inputTask.value));
-    var values = [];
-    let keys = Object.keys(localStorage);
-    let i = keys.length;
-
-    while (i--) {
-        values.push(JSON.parse(String(localStorage.getItem(keys[i]))));
-    }
-    console.log(values);
+    let values = (JSON.parse(localStorage.getItem("tasks")!));
+    totalTasks.textContent = "remaining tasks: " + values.length.toString();
+    remainingTasks = values.length;
     for (let task of values) {
         createTask(task.description);
     }
@@ -54,6 +49,8 @@ function deleteTask(todoItem: any, checkBox: any, task: todoTask) {
     const index = listOfTasks.indexOf(task);
     if (index > -1) {
         listOfTasks.splice(index, 1); // 2nd parameter means remove one item only
+        window.localStorage.setItem('tasks', JSON.stringify(listOfTasks));
+        remainingTasks = listOfTasks.length;
     }
 }
 
@@ -134,8 +131,8 @@ function createTask(task: string) {
     editButton.addEventListener("click", () => editTask(todoItem, todoValue, taskItem));
 
     listOfTasks.push(taskItem);
-    let index = String(listOfTasks.length);
-    window.localStorage.setItem('task' + index, JSON.stringify(taskItem));
+    window.localStorage.setItem('tasks', JSON.stringify(listOfTasks));
+    remainingTasks = listOfTasks.length;
 }
 
 window.addEventListener("load", loadPage);

@@ -104,10 +104,14 @@ h1 {
     display: block;
 }
 p {
+
   color: #7c795d; 
   font-family: 'Trocchi', serif; 
   font-size: 20px;
   text-align: center;
+  position: absolute;
+  bottom: 0;
+
 }
 .list {
   border: 2px solid black;
@@ -144,4 +148,8 @@ ul li:nth-child(odd) {
 /* Darker background-color on hover */
 ul li:hover {
   background: #ddd;
+}
+.list {
+  height: 600px;
+  text-align: center;
 }
